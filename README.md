@@ -1,9 +1,9 @@
 ```
 ==== Bloomlang esolang ====
 
-You get an accumulator with an initial value of 0 that you can increment or decrement, as well
-as a buffer that can store one value at a time. The code is read character by character and
-instructions are executed one after the other.
+You get an accumulator with an initial value of 0 that you can increment or decrement,
+as well as a buffer that can store one value at a time. The code is read character by
+character and instructions are executed one after the other.
 
 Instruction list:
  ^    increment accumulator
