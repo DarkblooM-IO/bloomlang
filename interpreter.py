@@ -135,12 +135,13 @@ Special commands:
         match cmd.lower():
           case "help": print(HELPSTRING)
           case "exit": run = False
-          case _: bloomlang(cmd)
+          case _:
+            bloomlang(cmd)
+            print("")
 
     except (EOFError, KeyboardInterrupt):
       run = False
-
-    print("")
+      print("")
 
 if __name__ == "__main__":
   main()
