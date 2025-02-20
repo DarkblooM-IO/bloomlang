@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from os import system
 from readline import parse_and_bind
 
 HELPSTRING = """
@@ -114,20 +115,22 @@ def main():
   print("""Welcome to the Bloomlang interpreter.
 Special commands:
 - help: print the manual
-- exit: exit the interpreter""")
+- exit: exit the interpreter
+- \\[command]: run [command] as a system program""")
 
   run = True
 
   while run:
     try:
-      cmd = input(">> ").strip().lower()
+      cmd = input(">> ").strip()
 
-      if cmd == "help":
-        print(HELPSTRING, end="")
-      elif cmd == "exit":
-        run = False
+      if cmd.startswith("\\"):
+        system(cmd)
       else:
-        bloomlang(cmd)
+        match cmd.lower():
+          case "help": print(HELPSTRING)
+          case "exit": run = False
+          case _: bloomlang(cmd)
 
     except (EOFError, KeyboardInterrupt):
       run = False
