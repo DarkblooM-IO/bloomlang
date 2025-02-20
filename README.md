@@ -8,6 +8,7 @@ character and instructions are executed one after the other.
 Instruction list:
  ^    increment accumulator
  `    decrement accumulator
+ !    set accumulator to 0
  +    add buffer to accumulator
  -    substract buffer from accumulator
  *    multiply accumulator by buffer
@@ -20,7 +21,7 @@ Instruction list:
  .    set accumulator to user input
  {}   repeatedly run the code inside while accumulator is not 0
  |    halt the program
- $    (optional, for debugging) print buffer
+ $    print buffer
 
 Any other character is ignored.
 ```
