@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-
-"""
-TODO:
-- loops
-"""
+from sys import argv
 
 def bloomlang(code: str):
   if code.count("{") != code.count("}"):
@@ -18,56 +14,72 @@ def bloomlang(code: str):
   stack       = []
 
   while pc < len(code):
-    match code[pc]:
-      case "^":
-        accumulator += 1
+    try:
+      match code[pc]:
+        case "^":
+          accumulator += 1
 
-      case "`":
-        accumulator -= 1
+        case "`":
+          accumulator -= 1
 
-      case "+":
-        accumulator += buffer
+        case "+":
+          accumulator += buffer
 
-      case "-":
-        accumulator -= buffer
+        case "-":
+          accumulator -= buffer
 
-      case "*":
-        accumulator *= buffer
+        case "*":
+          accumulator *= buffer
 
-      case "/":
-        accumulator = accumulator // buffer
+        case "/":
+          accumulator = accumulator // buffer
 
-      case "%":
-        accumulator = accumulator % buffer
+        case "%":
+          accumulator = accumulator % buffer
 
-      case "=":
-        buffer = accumulator
+        case "=":
+          buffer = accumulator
 
-      case "~":
-        accumulator = buffer
+        case "~":
+          accumulator = buffer
 
-      case "#":
-        print(accumulator, end="")
+        case "#":
+          print(accumulator, end="")
 
-      case "@":
-        print(chr(accumulator), end="")
+        case "@":
+          try:
+            print(chr(accumulator), end="")
+          except:
+            print("", end="")
 
-      case ".":
-        try:
-          accumulator = int(input())
-        except ValueError:
-          accumulator = 0
+        case ".":
+          try:
+            accumulator = int(input())
+          except (ValueError, EOFError):
+            accumulator = 0
 
-      case "|":
-        return
+        case "|":
+          return
 
-      case "$":
-        print(buffer, end="")
+        case "{":
+          stack.append(pc)
+          if accumulator == 0:
+            while len(stack) > 0:
+              pc += 1
+              if code[pc] == "}":
+                del stack[-1]
 
-    pc += 1
+        case "}":
+          if accumulator != 0:
+            pc = stack[-1]
 
-if __name__ == "__main__":
-  code = """
+        case "$":
+          print(buffer, end="")
 
-  """
-  bloomlang(code)
+      pc += 1
+
+    except KeyboardInterrupt:
+      return
+
+if __name__ == "__main__" and len(argv) > 1:
+  bloomlang(argv[1])
