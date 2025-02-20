@@ -36,7 +36,7 @@ def bloomlang(code: str):
     print("error: mismatched brackets")
     return
 
-  code = "".join([c if c in "^`!+-*/=~#@.{}|$" else "" for c in code.strip()])
+  code = "".join([c if c in "^`!+-*/%=~#@.{}|$" else "" for c in code.strip()])
 
   accumulator = 0
   buffer      = 0
