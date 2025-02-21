@@ -32,87 +32,88 @@ Any other character is ignored.
 """.strip()
 
 def bloomlang(code: str):
+  # check for incomplete loop scopes
   if code.count("{") != code.count("}"):
     print("error: mismatched brackets")
     return
 
+  # sanitize code
   code = "".join([c if c in "^`!+-*/%=~#@.{}|$" else "" for c in code.strip()])
 
   accumulator = 0
   buffer      = 0
-  pc          = 0
-  stack       = []
+  pc          = 0  # program counter
+  stack       = [] # to store loop checkpoints
 
+  # iterate over whole code
   while pc < len(code):
     try:
       match code[pc]:
-        case "^":
+        case "^": # increment accumulator if less than 255, else loop back around to 0
           accumulator = accumulator + 1 if accumulator < 255 else 0
 
-        case "`":
+        case "`": # decrement accumulator if greater than 0, else loop back around to 255
           accumulator = accumulator - 1 if accumulator > 0 else 255
 
-        case "!":
+        case "!": # set accumulator to 0
           accumulator = 0
 
-        case "+":
+        case "+": # add buffer to accumulator
           accumulator += buffer
 
-        case "-":
+        case "-": # substract buffer from accumulator
           accumulator -= buffer
 
-        case "*":
+        case "*": # multiply accumulator by buffer
           accumulator *= buffer
 
-        case "/":
+        case "/": # floor divide accumulator by buffer
           accumulator = accumulator // buffer
 
-        case "%":
+        case "%": # mod accumulator by buffer
           accumulator = accumulator % buffer
 
-        case "=":
+        case "=": # set buffer to accumulator
           buffer = accumulator
 
-        case "~":
+        case "~": # set accumulator to buffer
           accumulator = buffer
 
-        case "#":
+        case "#": # print accumulator
           print(accumulator, end="")
 
-        case "@":
+        case "@": # print ASCII char from accumulator or nothing if exception
           try:
             print(chr(accumulator), end="")
           except:
             print("", end="")
 
-        case ".":
+        case ".": # prompt user for value, default to 0 on exception
           try:
             accumulator = int(input())
           except (ValueError, EOFError):
             accumulator = 0
 
-        case "|":
+        case "|": # terminate function
           return
 
         case "{":
-          stack.append(pc)
+          stack.append(pc) # add loop start to stack
           if accumulator == 0:
-            while len(stack) > 0:
+            while len(stack) > 0: # advance until matching loop end
               pc += 1
               match code[pc]:
                 case "{": stack.append(pc)
-                case "}": del stack[-1]
-              # if code[pc] == "}":
-              #   del stack[-1]
+                case "}": del stack[-1] # delete last entry in stack
 
         case "}":
           if accumulator != 0:
-            pc = stack[-1]
+            pc = stack[-1] # jump back to matching loop start
 
-        case "$":
+        case "$": # print buffer
           print(buffer, end="")
 
-      pc += 1
+      pc += 1 # advance to next instruction
 
     except KeyboardInterrupt:
       return
