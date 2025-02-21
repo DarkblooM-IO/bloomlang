@@ -84,10 +84,7 @@ def bloomlang(code: str):
           print(accumulator, end="")
 
         case "@": # print ASCII char from accumulator or nothing if exception
-          try:
-            print(chr(accumulator), end="")
-          except:
-            print("", end="")
+          print(chr(accumulator), end="")
 
         case ".": # prompt user for value, default to 0 on exception
           try:
@@ -101,21 +98,24 @@ def bloomlang(code: str):
         case "{":
           stack.append(pc) # add loop start to stack
           if accumulator == 0:
-            while len(stack) > 0: # advance until matching loop end
+            loop = 1
+            while loop > 0: # advance until matching loop end
               pc += 1
               match code[pc]:
-                case "{": stack.append(pc)
-                case "}": del stack[-1] # delete last entry in stack
+                case "{": loop += 1
+                case "}": loop -= 1
 
         case "}":
           if accumulator != 0:
             pc = stack[-1] # jump back to matching loop start
+          else:
+            stack.pop() # discard last stack entry
 
         case "$": # print buffer
           print(buffer, end="")
 
       accumulator %= 256 # keep accumulator in range 0-255
-      buffer %= 256 # same for buffer
+      buffer%= 256 # same for buffer
 
       pc += 1 # advance to next instruction
 
