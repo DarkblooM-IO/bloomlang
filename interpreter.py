@@ -50,11 +50,11 @@ def bloomlang(code: str):
   while pc < len(code):
     try:
       match code[pc]:
-        case "^": # increment accumulator if less than 255, else loop back around to 0
-          accumulator = accumulator + 1 if accumulator < 255 else 0
+        case "^": # increment accumulator
+          accumulator += 1
 
-        case "`": # decrement accumulator if greater than 0, else loop back around to 255
-          accumulator = accumulator - 1 if accumulator > 0 else 255
+        case "`": # decrement accumulator
+          accumulator -= 1
 
         case "!": # set accumulator to 0
           accumulator = 0
@@ -113,6 +113,9 @@ def bloomlang(code: str):
 
         case "$": # print buffer
           print(buffer, end="")
+
+      accumulator %= 256 # keep accumulator in range 0-255
+      buffer %= 256 # same for buffer
 
       pc += 1 # advance to next instruction
 
