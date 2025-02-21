@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from os import system
+from os import system, path
+from sys import argv
 from readline import parse_and_bind
 
 HELPSTRING = """
@@ -119,33 +120,43 @@ def bloomlang(code: str):
       return
 
 def main():
-  parse_and_bind("set editing-mode vi")
+  if len(argv) > 1 and path.isfile(argv[1]):
+    code = ""
 
-  print("""Welcome to the Bloomlang interpreter.
+    with open(argv[1], "r") as file:
+      for line in file:
+        code = code+line.strip()
+
+    bloomlang(code)
+
+  else:
+    parse_and_bind("set editing-mode vi")
+
+    print("""Welcome to the Bloomlang interpreter.
 Special commands:
 - help: print the manual
 - exit: exit the interpreter
 - \\[command]: run [command] as a system program""")
 
-  run = True
+    run = True
 
-  while run:
-    try:
-      cmd = input(">> ").strip()
+    while run:
+      try:
+        cmd = input(">> ").strip()
 
-      if cmd.startswith("\\"):
-        system(cmd)
-      else:
-        match cmd.lower():
-          case "help": print(HELPSTRING)
-          case "exit": run = False
-          case _:
-            bloomlang(cmd)
-            print("")
+        if cmd.startswith("\\"):
+          system(cmd)
+        else:
+          match cmd.lower():
+            case "help": print(HELPSTRING)
+            case "exit": run = False
+            case _:
+              bloomlang(cmd)
+              print("")
 
-    except (EOFError, KeyboardInterrupt):
-      run = False
-      print("")
+      except (EOFError, KeyboardInterrupt):
+        run = False
+        print("")
 
 if __name__ == "__main__":
   main()
