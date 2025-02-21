@@ -99,8 +99,11 @@ def bloomlang(code: str):
           if accumulator == 0:
             while len(stack) > 0:
               pc += 1
-              if code[pc] == "}":
-                del stack[-1]
+              match code[pc]:
+                case "{": stack.append(pc)
+                case "}": del stack[-1]
+              # if code[pc] == "}":
+              #   del stack[-1]
 
         case "}":
           if accumulator != 0:
