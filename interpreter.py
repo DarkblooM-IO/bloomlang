@@ -31,6 +31,14 @@ Instruction list:
 Any other character is ignored.
 """.strip()
 
+MOTD = """
+Welcome to the Bloomlang interpreter.
+Special commands:
+- help: print the manual
+- exit: exit the interpreter
+- \\[command]: run [command] as a system program
+""".strip()
+
 def bloomlang(code: str):
   # check for incomplete loop scopes
   if code.count("{") != code.count("}"):
@@ -134,20 +142,15 @@ def main():
   else:
     parse_and_bind("set editing-mode vi")
 
-    print("""Welcome to the Bloomlang interpreter.
-Special commands:
-- help: print the manual
-- exit: exit the interpreter
-- \\[command]: run [command] as a system program""")
+    print(MOTD)
 
     run = True
-
     while run:
       try:
         cmd = input(">> ").strip()
 
         if cmd.startswith("\\"):
-          system(cmd)
+          system(cmd[1:])
         else:
           match cmd.lower():
             case "help": print(HELPSTRING)
