@@ -40,7 +40,7 @@ Special commands:
 """.strip()
 
 def bloomlang(code: str):
-  # check for mismatched brackets
+  # check for incomplete loop scopes
   if code.count("{") != code.count("}"):
     print("error: mismatched brackets")
     return
